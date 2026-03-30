@@ -1,0 +1,208 @@
+import random
+import copy
+
+def print_board(board):
+    print("\n")
+    for i, row in enumerate(board):
+        print(" | ".join(row))
+        if i != 2:
+            print("--+---+--")
+    print("\n")
+
+def check_winner(board, symbol):
+    for i in range(3):
+        if all(cell == symbol for cell in board[i]):    # Rows
+            return True
+        if all(board[j][i] == symbol for j in range(3)): # Columns
+            return True
+    # Diagonals
+    if all(board[i][i] == symbol for i in range(3)):
+        return True
+    if all(board[i][2-i] == symbol for i in range(3)):
+        return True
+    return False
+
+def is_full(board):
+    return all(cell != " " for row in board for cell in row)
+
+def get_easy_move(board):
+    empty = [(i, j) for i in range(3) for j in range(3) if board[i][j] == " "]
+    return random.choice(empty)
+
+def get_medium_move(board, computer_symbol, user_symbol):
+    # First, can the computer win with this move?
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == " ":
+                temp = copy.deepcopy(board)
+                temp[i][j] = computer_symbol
+                if check_winner(temp, computer_symbol):
+                    return (i, j)
+    # Second, can the player win next? Block!
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == " ":
+                temp = copy.deepcopy(board)
+                temp[i][j] = user_symbol
+                if check_winner(temp, user_symbol):
+                    return (i, j)
+    # Otherwise, random
+    return get_easy_move(board)
+
+def get_hard_move(board, computer_symbol, user_symbol):
+    # Using minimax algorithm
+    def minimax(board, is_maximizing):
+        if check_winner(board, computer_symbol):
+            return 1
+        elif check_winner(board, user_symbol):
+            return -1
+        elif is_full(board):
+            return 0
+        
+        if is_maximizing:
+            best_score = -float('inf')
+            for i in range(3):
+                for j in range(3):
+                    if board[i][j] == " ":
+                        board[i][j] = computer_symbol
+                        score = minimax(board, False)
+                        board[i][j] = " "
+                        best_score = max(best_score, score)
+            return best_score
+        else:
+            best_score = float('inf')
+            for i in range(3):
+                for j in range(3):
+                    if board[i][j] == " ":
+                        board[i][j] = user_symbol
+                        score = minimax(board, True)
+                        board[i][j] = " "
+                        best_score = min(best_score, score)
+            return best_score
+    
+    best_score = -float('inf')
+    move = None
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == " ":
+                board[i][j] = computer_symbol
+                score = minimax(board, False)
+                board[i][j] = " "
+                if score > best_score:
+                    best_score = score
+                    move = (i, j)
+    return move
+
+def play_single_player():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    user_symbol = "X"
+    computer_symbol = "O"
+    current_turn = "user"
+
+    # Difficulty selection
+    while True:
+        print("Choose Difficulty:")
+        print("1. Easy")
+        print("2. Medium")
+        print("3. Hard")
+        diff = input("Enter 1, 2 or 3: ").strip()
+        if diff in ['1', '2', '3']:
+            break
+        print("Invalid. Please enter 1, 2 or 3.")
+    print("Single Player Mode")
+    print_board(board)
+
+    while True:
+        if current_turn == "user":
+            try:
+                row = int(input("Your turn! Enter row (0-2): ").strip())
+                col = int(input("Enter col (0-2): ").strip())
+                if row not in range(3) or col not in range(3):
+                    print("Row and column must be 0, 1, or 2. Try again.")
+                    continue
+                if board[row][col] != " ":
+                    print("Cell already taken! Try again.")
+                    continue
+                board[row][col] = user_symbol
+            except (ValueError, IndexError):
+                print("Invalid input. Enter row and column as numbers between 0 and 2.")
+                continue
+        else:
+            print("Computer's turn...")
+            if diff == "1":
+                row, col = get_easy_move(board)
+            elif diff == "2":
+                row, col = get_medium_move(board, computer_symbol, user_symbol)
+            else:
+                row, col = get_hard_move(board, computer_symbol, user_symbol)
+            board[row][col] = computer_symbol
+
+        print_board(board)
+
+        if check_winner(board, user_symbol):
+            print(" You win!")
+            return
+        elif check_winner(board, computer_symbol):
+            print(" Computer wins!")
+            return
+        elif is_full(board):
+            print("It's a tie!")
+            return
+
+        current_turn = "computer" if current_turn == "user" else "user"
+
+def play_two_player():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    symbols = ["X", "O"]
+    current_turn = 0
+
+    print("Two Player Mode")
+    print_board(board)
+
+    while True:
+        player = f"Player {current_turn+1}"
+        try:
+            row = int(input(f"{player}'s turn ({symbols[current_turn]}). Enter row (0-2): ").strip())
+            col = int(input(f"{player}'s turn ({symbols[current_turn]}). Enter col (0-2): ").strip())
+            if row not in range(3) or col not in range(3):
+                print("Row and column must be 0, 1, or 2. Try again.")
+                continue
+            if board[row][col] != " ":
+                print("Cell already taken! Try again.")
+                continue
+            board[row][col] = symbols[current_turn]
+        except (ValueError, IndexError):
+            print("Invalid input. Enter row and column as numbers between 0 and 2.")
+            continue
+
+        print_board(board)
+
+        if check_winner(board, symbols[current_turn]):
+            print(f"{player} wins!")
+            return
+        elif is_full(board):
+            print("It's a tie!")
+            return
+
+        current_turn = 1 - current_turn
+
+def main():
+    print("Welcome to Tic-Tac-Toe!")
+    while True:
+        mode = ""
+        while mode not in ["1", "2"]:
+            mode = input("Enter 1 to play against computer, 2 for two player mode: ").strip()
+        if mode == "1":
+            play_single_player()
+        else:
+            play_two_player()
+        play_again = input("Do you want to play again? (y/n): ").strip().lower()
+        if play_again != "y":
+            print("Thanks for playing!")
+            break
+
+if __name__ == "__main__":
+    main()
+
+
+#Designed By NITYAM...
