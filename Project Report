@@ -1,0 +1,100 @@
+# AI-Based Tic Tac Toe Game using Minimax Algorithm
+
+## Submitted By
+
+Nityam Jain
+B.Tech Computer Science
+
+---
+
+## 1. Introduction
+
+This project is a Python-based implementation of the classic Tic Tac Toe game. The objective of this project is to design a simple game that not only allows user interaction but also demonstrates the use of artificial intelligence in decision-making. The game can be played in both single-player and two-player modes, making it interactive and flexible.
+
+---
+
+## 2. Objective
+
+The main objectives of this project are:
+
+* To implement a playable Tic Tac Toe game using Python
+* To understand game logic and decision-making
+* To apply artificial intelligence concepts using algorithms
+* To provide different difficulty levels for better user experience
+
+---
+
+## 3. Tools and Technologies Used
+
+* Programming Language: Python
+* Modules Used: random, copy
+* Platform: VS Code / Terminal
+
+---
+
+## 4. Working of the Project
+
+The game is played on a 3x3 grid where players take turns marking X and O. The program checks for winning conditions after every move, including rows, columns, and diagonals.
+
+In single-player mode, the computer acts as the opponent and plays based on the selected difficulty level:
+
+* Easy Mode: The computer selects moves randomly.
+* Medium Mode: The computer tries to win or block the user’s winning move.
+* Hard Mode: The computer uses the Minimax algorithm to choose the best possible move.
+
+The Minimax algorithm evaluates all possible game states and selects the move that maximizes the computer’s chances of winning while minimizing the opponent’s chances.
+
+---
+
+## 5. Features
+
+* Single-player and two-player modes
+* Multiple difficulty levels
+* Intelligent AI-based gameplay
+* Input validation for correct moves
+* Clear display of the game board
+
+---
+
+## 6. Algorithm Used
+
+The project uses the Minimax algorithm in hard mode. This algorithm works by simulating all possible moves and selecting the optimal one based on the outcome. It ensures that the computer always plays the best move, making it very difficult for the user to win.
+
+---
+
+## 7. Advantages
+
+* Simple and easy to understand
+* Demonstrates AI concepts clearly
+* Improves logical and problem-solving skills
+* Interactive and engaging gameplay
+
+---
+
+## 8. Limitations
+
+* Limited to a 3x3 grid
+* No graphical user interface (CLI-based)
+* Does not include advanced learning (no machine learning)
+
+---
+
+## 9. Future Enhancements
+
+* Adding a graphical user interface (GUI)
+* Implementing score tracking
+* Adding sound effects and animations
+* Using machine learning for adaptive gameplay
+
+---
+
+## 10. Conclusion
+
+This project successfully demonstrates how artificial intelligence can be applied in a simple game like Tic Tac Toe. It helped in understanding programming concepts, game logic, and algorithm-based decision-making. The implementation of the Minimax algorithm makes the game more challenging and highlights the importance of AI in problem-solving.
+
+---
+
+## 11. References
+
+* Python Documentation
+* Online tutorials on Tic Tac Toe and Minimax Algorithm
